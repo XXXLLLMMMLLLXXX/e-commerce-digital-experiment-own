@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#2a5bd7">
+  <title>Vielen Dank! - FitBar Store</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 650px;
+      width: 100%;
+      padding: 50px 40px;
+      text-align: center;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .checkmark-container {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 30px;
+      position: relative;
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: block;
+      stroke-width: 3;
+      stroke: #4BB543;
+      stroke-miterlimit: 10;
+      box-shadow: inset 0 0 0 #4BB543;
+      animation: fillCheckmark 0.4s ease-in-out 0.4s forwards, scaleCheckmark 0.3s ease-in-out 0.9s both;
+    }
+
+    .checkmark-circle {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      stroke-width: 3;
+      stroke-miterlimit: 10;
+      stroke: #4BB543;
+      fill: none;
+      animation: strokeCheckmark 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+
+    .checkmark-check {
+      transform-origin: 50% 50%;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: strokeCheckmark 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    }
+
+    @keyframes strokeCheckmark {
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes scaleCheckmark {
+      0%, 100% {
+        transform: none;
+      }
+      50% {
+        transform: scale3d(1.1, 1.1, 1);
+      }
+    }
+
+    @keyframes fillCheckmark {
+      100% {
+        box-shadow: inset 0 0 0 40px #4BB543;
+      }
+    }
+
+    h1 {
+      color: #12131a;
+      font-size: 32px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #555;
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .info-box {
+      background: #f8f9fb;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 30px 0;
+      text-align: left;
+    }
+
+    .info-box h2 {
+      color: #12131a;
+      font-size: 18px;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .info-box p {
+      color: #555;
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-box strong {
+      color: #2a5bd7;
+    }
+
+    .contact-info {
+      background: #eef2ff;
+      border-left: 4px solid #2a5bd7;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+      text-align: left;
+    }
+
+    .contact-info h3 {
+      color: #12131a;
+      font-size: 16px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .contact-info p {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 6px 0;
+    }
+
+    .contact-info a {
+      color: #2a5bd7;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+
+    .close-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .close-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .close-button:active {
+      transform: translateY(0);
+    }
+
+    .footer-note {
+      color: #888;
+      font-size: 13px;
+      margin-top: 25px;
+      font-style: italic;
+    }
+
+    /* Мобильная адаптация */
+    @media (max-width: 768px) {
+      .container {
+        padding: 40px 30px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .checkmark-container {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 25px;
+      }
+
+      .checkmark {
+        width: 70px;
+        height: 70px;
+      }
+
+      .info-box {
+        padding: 20px;
+      }
+
+      .info-box h2 {
+        font-size: 16px;
+      }
+
+      .info-box p {
+        font-size: 14px;
+      }
+
+      .contact-info {
+        padding: 16px;
+      }
+
+      .contact-info h3 {
+        font-size: 15px;
+      }
+
+      .contact-info p {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 35px 25px;
+        border-radius: 16px;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin-bottom: 12px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+        margin-bottom: 25px;
+      }
+
+      .checkmark-container {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+      }
+
+      .checkmark {
+        width: 60px;
+        height: 60px;
+      }
+
+      .info-box {
+        padding: 18px;
+        margin: 25px 0;
+      }
+
+      .info-box h2 {
+        font-size: 15px;
+        margin-bottom: 12px;
+      }
+
+      .info-box p {
+        font-size: 13px;
+      }
+
+      .contact-info {
+        padding: 14px;
+        margin: 20px 0;
+      }
+
+      .close-button {
+        padding: 12px 28px;
+        font-size: 15px;
+      }
+
+      .footer-note {
+        font-size: 12px;
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Checkmark Animation -->
+    <div class="checkmark-container">
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+
+    <h1>Vielen Dank für Ihre Teilnahme!</h1>
+    
+    <p class="subtitle">
+      Ihre Antworten wurden erfolgreich übermittelt. Wir schätzen Ihre Zeit und Ihr wertvolles Feedback sehr.
+    </p>
+
+    <div class="info-box">
+      <h2>Was passiert jetzt?</h2>
+      <p>
+        Ihre Daten werden <strong>anonym und vertraulich</strong> behandelt und ausschließlich für wissenschaftliche Zwecke verwendet.
+      </p>
+      <p>
+        Die Ergebnisse dieser Studie werden dazu beitragen, das Verständnis von Entscheidungsprozessen im E-Commerce zu verbessern.
+      </p>
+      <p>
+        Falls Sie Interesse an den Studienergebnissen haben, können Sie sich gerne bei uns melden.
+      </p>
+    </div>
+
+    <div class="contact-info">
+      <h3>Bei Fragen oder Anmerkungen:</h3>
+      <p>
+        <strong>Friedrich-Schiller-Universität Jena</strong><br>
+        
+      </p>
+      <p>
+        E-Mail: <a href="mailto:leonid.popkov@uni-jena.de">leonid.popkov@uni-jena.de</a>
+      </p>
+    </div>
+
+    <button class="close-button" onclick="closeWindow()">Fenster schließen</button>
+
+    <p class="footer-note">
+      Sie können dieses Fenster jetzt schließen.
+    </p>
+  </div>
+
+  <script>
+    // Проверяем что опрос был завершён
+    window.addEventListener('load', () => {
+      const completed = sessionStorage.getItem('surveyCompleted');
+      
+      if (completed) {
+        console.log('✅ Survey completed successfully');
+        
+        // Опционально: очищаем данные после успешного завершения
+        // sessionStorage.removeItem('experimentData');
+        // sessionStorage.removeItem('participantId');
+      } else {
+        console.warn('⚠️ Direct access to thank-you page');
+      }
+    });
+
+    function closeWindow() {
+      // Пробуем закрыть окно
+      window.close();
+      
+      // Если не получилось (современные браузеры могут блокировать),
+      // перенаправляем на главную страницу эксперимента
+      setTimeout(() => {
+        // Можете заменить на вашу главную страницу
+        window.location.href = 'randomizer.html';
+      }, 500);
+    }
+
+    // Предотвращаем возврат назад
+    history.pushState(null, null, location.href);
+    window.addEventListener('popstate', () => {
+      history.pushState(null, null, location.href);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#2196f3">
+  <title>Umfrage - FitBar Store</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+    }
+    
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #f6f7fb;
+      color: #12131a;
+      -webkit-text-size-adjust: 100%;
+      padding-bottom: 40px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: #12131a;
+      color: #fff;
+    }
+    
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    
+    .meta {
+      opacity: 0.8;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 18px;
+    }
+
+    .survey-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: 24px;
+      color: #12131a;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 30px 0 20px 0;
+      color: #12131a;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #eef2ff;
+    }
+
+    .intro-text {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f8f9fb;
+      border-radius: 10px;
+      border-left: 4px solid #2a5bd7;
+    }
+
+    .question-block {
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #f0f1f5;
+    }
+
+    .question-block:last-child {
+      border-bottom: none;
+    }
+
+    .question-text {
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: #12131a;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .required {
+      color: #e63946;
+      margin-left: 4px;
+    }
+
+    .radio-group, .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .radio-option, .checkbox-option {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      border: 1px solid #e7e8ee;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #fff;
+    }
+
+    .radio-option:hover, .checkbox-option:hover {
+      border-color: #2a5bd7;
+      background: #f8f9ff;
+    }
+
+    .radio-option.selected, .checkbox-option.selected {
+      border-color: #2a5bd7;
+      background: #eef2ff;
+    }
+
+    .radio-option input[type="radio"],
+    .checkbox-option input[type="checkbox"] {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #2a5bd7;
+    }
+
+    .radio-option label,
+    .checkbox-option label {
+      cursor: pointer;
+      flex: 1;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d9dbe6;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+      transition: border-color 0.2s ease;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #2a5bd7;
+      box-shadow: 0 0 0 3px rgba(42, 91, 215, 0.1);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23666' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+
+    .error-message {
+      color: #e63946;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .input-hint {
+      font-size: 13px;
+      color: #666;
+      margin-top: 6px;
+    }
+
+    .submit-button {
+      background: #2a5bd7;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      max-width: 300px;
+      display: block;
+      margin: 30px auto 0;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(42, 91, 215, 0.3);
+    }
+
+    .submit-button:hover {
+      background: #2451b8;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(42, 91, 215, 0.4);
+    }
+
+    .submit-button:active {
+      transform: translateY(0);
+    }
+
+    .submit-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #e7e8ee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2a5bd7 0%, #5b8def 100%);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* ========================================
+       МОБИЛЬНАЯ АДАПТАЦИЯ
+       ======================================== */
+
+    /* Tablets and below (768px and smaller) */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+        padding: 12px 16px;
+      }
+
+      .brand {
+        font-size: 16px;
+      }
+
+      .meta {
+        font-size: 12px;
+      }
+
+      .container {
+        padding: 0 12px;
+      }
+
+      .survey-card {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        margin: 25px 0 18px 0;
+      }
+
+      .question-text {
+        font-size: 14px;
+      }
+
+      .radio-option, .checkbox-option {
+        padding: 10px 12px;
+      }
+
+      .intro-text {
+        padding: 14px;
+        font-size: 14px;
+      }
+    }
+
+    /* Mobile phones (480px and smaller) */
+    @media (max-width: 480px) {
+      body {
+        font-size: 14px;
+      }
+
+      .header {
+        padding: 10px 12px;
+      }
+
+      .brand {
+        font-size: 15px;
+      }
+
+      .meta {
+        font-size: 11px;
+      }
+
+      .container {
+        padding: 0 10px;
+        margin: 15px auto;
+      }
+
+      .survey-card {
+        padding: 16px;
+        border-radius: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        margin: 20px 0 15px 0;
+      }
+
+      .intro-text {
+        padding: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+
+      .question-block {
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+      }
+
+      .question-text {
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+
+      .radio-option, .checkbox-option {
+        padding: 10px 12px;
+        min-height: 44px; /* Apple touch recommendation */
+      }
+
+      .radio-option label,
+      .checkbox-option label {
+        font-size: 13px;
+        line-height: 1.3;
+      }
+
+      .radio-option input[type="radio"],
+      .checkbox-option input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+      }
+
+      input[type="number"],
+      input[type="text"],
+      select {
+        padding: 11px 12px;
+        font-size: 14px;
+        min-height: 44px; /* Apple touch recommendation */
+      }
+
+      .submit-button {
+        padding: 12px 24px;
+        font-size: 15px;
+        min-height: 44px;
+        margin-top: 25px;
+      }
+
+      .error-message,
+      .input-hint {
+        font-size: 12px;
+      }
+    }
+
+    /* Very small phones (360px and smaller) */
+    @media (max-width: 360px) {
+      .header {
+        padding: 8px 10px;
+      }
+
+      .brand {
+        font-size: 14px;
+      }
+
+      .meta {
+        font-size: 10px;
+      }
+
+      .container {
+        padding: 0 8px;
+        margin: 12px auto;
+      }
+
+      .survey-card {
+        padding: 14px;
+        border-radius: 8px;
+      }
+
+      h1 {
+        font-size: 16px;
+      }
+
+      .section-title {
+        font-size: 15px;
+        margin: 18px 0 12px 0;
+      }
+
+      .intro-text {
+        padding: 10px;
+        font-size: 12px;
+        margin-bottom: 14px;
+      }
+
+      .question-block {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+      }
+
+      .question-text {
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+
+      .radio-option, .checkbox-option {
+        padding: 9px 10px;
+        min-height: 44px;
+      }
+
+      .radio-option label,
+      .checkbox-option label {
+        font-size: 12px;
+        line-height: 1.3;
+      }
+
+      .radio-option input[type="radio"],
+      .checkbox-option input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+        margin-right: 7px;
+      }
+
+      input[type="number"],
+      input[type="text"],
+      select {
+        padding: 10px 11px;
+        font-size: 13px;
+        min-height: 44px;
+      }
+
+      .submit-button {
+        padding: 11px 20px;
+        font-size: 14px;
+        min-height: 44px;
+        margin-top: 20px;
+      }
+
+      .error-message,
+      .input-hint {
+        font-size: 11px;
+      }
+
+      .progress-bar {
+        height: 5px;
+        margin-bottom: 15px;
+      }
+    }
+
+    /* Landscape mode for mobile devices */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .container {
+        margin: 12px auto;
+      }
+
+      .survey-card {
+        padding: 16px;
+      }
+
+      .section-title {
+        margin: 18px 0 14px 0;
+      }
+
+      .question-block {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+      }
+    }
+
+    /* Touch optimization for all mobile devices */
+    @media (max-width: 768px) {
+      .radio-option,
+      .checkbox-option,
+      .submit-button,
+      input[type="number"],
+      input[type="text"],
+      select {
+        -webkit-tap-highlight-color: rgba(42, 91, 215, 0.1);
+      }
+
+      * {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+        -webkit-touch-callout: none;
+      }
+
+      button, input, select {
+        touch-action: manipulation;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">FitBar Store</div>
+    <div class="meta">Umfrage • Demo-Shop</div>
+  </header>
+
+  <div class="container">
+    <div class="survey-card">
+      <h1>Umfrage zu Ihrer Erfahrung</h1>
+      
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="intro-text">
+        <strong>Vielen Dank für Ihre Teilnahme.</strong><br>
+        Im nächsten Teil der Studie werden Ihnen einige Fragen zu Ihrer Wahrnehmung der Website und Ihrer Entscheidung gestellt. Bitte beantworten Sie die folgenden Fragen so ehrlich wie möglich.
+      </div>
+
+      <form id="surveyForm" novalidate>
+        <!-- ==================== SECTION 1: AFTER WEBSITE ==================== -->
+        <h2 class="section-title">Ihre Wahrnehmung des Produkts</h2>
+
+        <!-- Q06: Attraktivität -->
+        <div class="question-block">
+          <div class="question-text">
+            Wie attraktiv fanden Sie das Produkt?<span class="required">*</span>
+          </div>
+          <div class="radio-group" id="q06_group">
+            <label class="radio-option">
+              <input type="radio" name="q06_attraktiv" value="1" required>
+              <span>Überhaupt nicht attraktiv</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q06_attraktiv" value="2">
+              <span>Eher nicht attraktiv</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q06_attraktiv" value="3">
+              <span>Weder attraktiv noch unattraktiv</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q06_attraktiv" value="4">
+              <span>Eher attraktiv</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q06_attraktiv" value="5">
+              <span>Sehr attraktiv</span>
+            </label>
+          </div>
+          <div class="error-message" id="q06_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q07: Hochwertigkeit -->
+        <div class="question-block">
+          <div class="question-text">
+            Wie hochwertig fanden Sie das Produkt?<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q07_hochwertig" value="1" required>
+              <span>Überhaupt nicht hochwertig</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q07_hochwertig" value="2">
+              <span>Eher nicht hochwertig</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q07_hochwertig" value="3">
+              <span>Weder hochwertig noch minderwertig</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q07_hochwertig" value="4">
+              <span>Eher hochwertig</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q07_hochwertig" value="5">
+              <span>Sehr hochwertig</span>
+            </label>
+          </div>
+          <div class="error-message" id="q07_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q05: Kaufwahrscheinlichkeit -->
+        <div class="question-block">
+          <div class="question-text">
+            Wie wahrscheinlich ist es, dass Sie dieses Produkt kaufen würden?<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q05_kaufwahrsch" value="1" required>
+              <span>Sehr unwahrscheinlich</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q05_kaufwahrsch" value="2">
+              <span>Eher unwahrscheinlich</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q05_kaufwahrsch" value="3">
+              <span>Weder wahrscheinlich noch unwahrscheinlich</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q05_kaufwahrsch" value="4">
+              <span>Eher wahrscheinlich</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q05_kaufwahrsch" value="5">
+              <span>Sehr wahrscheinlich</span>
+            </label>
+          </div>
+          <div class="error-message" id="q05_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q11: Vorstellen zu kaufen -->
+        <div class="question-block">
+          <div class="question-text">
+            Ich kann mir gut vorstellen, dieses Produkt zu kaufen.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q11_vorstellen" value="1" required>
+              <span>Stimme überhaupt nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q11_vorstellen" value="2">
+              <span>Stimme eher nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q11_vorstellen" value="3">
+              <span>Teils/teils</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q11_vorstellen" value="4">
+              <span>Stimme eher zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q11_vorstellen" value="5">
+              <span>Stimme voll und ganz zu</span>
+            </label>
+          </div>
+          <div class="error-message" id="q11_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q08: Persönlich relevant -->
+        <div class="question-block">
+          <div class="question-text">
+            Das Produkt war für mich persönlich relevant.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q08_relevant" value="1" required>
+              <span>Stimme überhaupt nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q08_relevant" value="2">
+              <span>Stimme eher nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q08_relevant" value="3">
+              <span>Teils/teils</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q08_relevant" value="4">
+              <span>Stimme eher zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q08_relevant" value="5">
+              <span>Stimme voll und ganz zu</span>
+            </label>
+          </div>
+          <div class="error-message" id="q08_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q09: Intensiv beschäftigt -->
+        <div class="question-block">
+          <div class="question-text">
+            Ich habe mich während des Besuchs der Website intensiv mit dem Produkt beschäftigt.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q09_beschaeftigt" value="1" required>
+              <span>Stimme überhaupt nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q09_beschaeftigt" value="2">
+              <span>Stimme eher nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q09_beschaeftigt" value="3">
+              <span>Teils/teils</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q09_beschaeftigt" value="4">
+              <span>Stimme eher zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q09_beschaeftigt" value="5">
+              <span>Stimme voll und ganz zu</span>
+            </label>
+          </div>
+          <div class="error-message" id="q09_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q10: Interesse geweckt -->
+        <div class="question-block">
+          <div class="question-text">
+            Das Produkt hat mein Interesse geweckt.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q10_interesse" value="1" required>
+              <span>Stimme überhaupt nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q10_interesse" value="2">
+              <span>Stimme eher nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q10_interesse" value="3">
+              <span>Teils/teils</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q10_interesse" value="4">
+              <span>Stimme eher zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q10_interesse" value="5">
+              <span>Stimme voll und ganz zu</span>
+            </label>
+          </div>
+          <div class="error-message" id="q10_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- NEW_Q1: Preis angemessen -->
+        <div class="question-block">
+          <div class="question-text">
+            Der Preis des Produkts erscheint mir angemessen.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="qnew1_preis" value="1" required>
+              <span>Stimme überhaupt nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew1_preis" value="2">
+              <span>Stimme eher nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew1_preis" value="3">
+              <span>Teils/teils</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew1_preis" value="4">
+              <span>Stimme eher zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew1_preis" value="5">
+              <span>Stimme voll und ganz zu</span>
+            </label>
+          </div>
+          <div class="error-message" id="qnew1_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- NEW_Q2: Urgency (только для Scarcity - группы 3 и 4) -->
+        <div class="question-block hidden" id="qnew2_block">
+          <div class="question-text">
+            Ich verspüre Dringlichkeit, das Produkt jetzt zu kaufen.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="qnew2_urgency" value="1">
+              <span>Stimme überhaupt nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew2_urgency" value="2">
+              <span>Stimme eher nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew2_urgency" value="3">
+              <span>Teils/teils</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew2_urgency" value="4">
+              <span>Stimme eher zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew2_urgency" value="5">
+              <span>Stimme voll und ganz zu</span>
+            </label>
+          </div>
+          <div class="error-message" id="qnew2_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- NEW_Q3: Trust (только для Social Proof - группы 2 и 4) -->
+        <div class="question-block hidden" id="qnew3_block">
+          <div class="question-text">
+            Das Produkt wirkt vertrauenswürdig aufgrund der Bewertungen/Käufe.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="qnew3_trust" value="1">
+              <span>Stimme überhaupt nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew3_trust" value="2">
+              <span>Stimme eher nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew3_trust" value="3">
+              <span>Teils/teils</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew3_trust" value="4">
+              <span>Stimme eher zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="qnew3_trust" value="5">
+              <span>Stimme voll und ganz zu</span>
+            </label>
+          </div>
+          <div class="error-message" id="qnew3_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q03: Beliebtheit (только для Social Proof - группы 2 и 4) -->
+        <div class="question-block hidden" id="q03_block">
+          <div class="question-text">
+            Wie beliebt erschien Ihnen das Produkt auf der Website?<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q03_beliebt" value="1">
+              <span>Überhaupt nicht beliebt</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q03_beliebt" value="2">
+              <span>Eher nicht beliebt</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q03_beliebt" value="3">
+              <span>Weder beliebt noch unbeliebt</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q03_beliebt" value="4">
+              <span>Eher beliebt</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q03_beliebt" value="5">
+              <span>Sehr beliebt</span>
+            </label>
+          </div>
+          <div class="error-message" id="q03_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q04: Knappheit (только для Scarcity - группы 3 и 4) -->
+        <div class="question-block hidden" id="q04_block">
+          <div class="question-text">
+            Wie knapp erschien Ihnen das Produkt auf der Website?<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q04_knapp" value="1">
+              <span>Überhaupt nicht knapp</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q04_knapp" value="2">
+              <span>Eher nicht knapp</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q04_knapp" value="3">
+              <span>Weder knapp noch nicht knapp</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q04_knapp" value="4">
+              <span>Eher knapp</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q04_knapp" value="5">
+              <span>Sehr knapp</span>
+            </label>
+          </div>
+          <div class="error-message" id="q04_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- ==================== SECTION 2: MANIPULATION CHECK ==================== -->
+        <h2 class="section-title">Überprüfungsfragen</h2>
+
+        <!-- Q13: Social Proof Check -->
+        <div class="question-block">
+          <div class="question-text">
+            Auf der Website gab es Hinweise darauf, dass dieses Produkt von vielen anderen gekauft/gewählt wurde.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q13_sp_check" value="Ja" required>
+              <span>Ja</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q13_sp_check" value="Nein">
+              <span>Nein</span>
+            </label>
+          </div>
+          <div class="error-message" id="q13_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q14: Scarcity Check -->
+        <div class="question-block">
+          <div class="question-text">
+            Auf der Website gab es Hinweise darauf, dass das Produkt nur begrenzt verfügbar ist.<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q14_sc_check" value="Ja" required>
+              <span>Ja</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q14_sc_check" value="Nein">
+              <span>Nein</span>
+            </label>
+          </div>
+          <div class="error-message" id="q14_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- Q15: Attention Check -->
+        <div class="question-block">
+          <div class="question-text">
+            Aufmerksamkeitsfrage: Bitte wählen Sie "Stimme eher zu".<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q15_attention" value="1" required>
+              <span>Stimme überhaupt nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q15_attention" value="2">
+              <span>Stimme eher nicht zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q15_attention" value="3">
+              <span>Teils/teils</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q15_attention" value="4">
+              <span>Stimme eher zu</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q15_attention" value="5">
+              <span>Stimme voll und ganz zu</span>
+            </label>
+          </div>
+          <div class="error-message" id="q15_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <!-- ==================== SECTION 3: DEMOGRAFIE ==================== -->
+        <h2 class="section-title">Demografische Angaben</h2>
+
+        <!-- Q16: Alter -->
+        <div class="question-block">
+          <div class="question-text">
+            Wie alt sind Sie?<span class="required">*</span>
+          </div>
+          <input type="number" name="q16_alter" id="q16_alter" min="1" max="120" placeholder="Alter eingeben" required>
+          <div class="input-hint">Oder wählen Sie "Keine Angabe" wenn Sie nicht antworten möchten.</div>
+          <label style="margin-top: 10px; display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="q16_keine_angabe" style="margin-right: 8px;">
+            <span>Keine Angabe</span>
+          </label>
+          <div class="error-message" id="q16_error">Bitte geben Sie Ihr Alter ein oder wählen Sie "Keine Angabe".</div>
+        </div>
+
+        <!-- Q17: Geschlecht -->
+        <div class="question-block">
+          <div class="question-text">
+            Welches Geschlecht haben Sie?<span class="required">*</span>
+          </div>
+          <select name="q17_geschlecht" id="q17_geschlecht" required>
+            <option value="" disabled selected>Bitte wählen...</option>
+            <option value="Männlich">Männlich</option>
+            <option value="Weiblich">Weiblich</option>
+            <option value="Divers">Divers</option>
+            <option value="Keine Angabe">Keine Angabe</option>
+          </select>
+          <div class="error-message" id="q17_error">Bitte wählen Sie eine Option aus.</div>
+        </div>
+
+        <!-- Q18: Bildungsabschluss -->
+        <div class="question-block">
+          <div class="question-text">
+            Was ist Ihr höchster Bildungsabschluss?<span class="required">*</span>
+          </div>
+          <select name="q18_bildung" id="q18_bildung" required>
+            <option value="" disabled selected>Bitte wählen...</option>
+            <option value="Kein Abschluss">Kein Abschluss</option>
+            <option value="Schulabschluss">Schulabschluss</option>
+            <option value="Berufsausbildung">Berufsausbildung</option>
+            <option value="Bachelor">Bachelor</option>
+            <option value="Master">Master</option>
+            <option value="Promotion">Promotion</option>
+          </select>
+          <div class="error-message" id="q18_error">Bitte wählen Sie eine Option aus.</div>
+        </div>
+
+        <!-- Q19: Häufigkeit Proteinprodukte -->
+        <div class="question-block">
+          <div class="question-text">
+            Wie häufig konsumieren Sie Proteinprodukte (z. B. Proteinriegel, Shakes)?<span class="required">*</span>
+          </div>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="q19_protein" value="Nie" required>
+              <span>Nie</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q19_protein" value="Selten">
+              <span>Selten</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q19_protein" value="Gelegentlich">
+              <span>Gelegentlich</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q19_protein" value="Regelmäßig">
+              <span>Regelmäßig</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="q19_protein" value="Sehr häufig">
+              <span>Sehr häufig</span>
+            </label>
+          </div>
+          <div class="error-message" id="q19_error">Bitte wählen Sie eine Antwort aus.</div>
+        </div>
+
+        <button type="submit" class="submit-button" id="submitBtn">Umfrage absenden</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="survey.js"></script>
+</body>
+</html>
