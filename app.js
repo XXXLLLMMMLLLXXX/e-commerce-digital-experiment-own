@@ -77,9 +77,33 @@ function getParticipantId() {
   return participantId;
 }
 
+// ====== ⭐ PROLIFIC: ПОЛУЧЕНИЕ ПАРАМЕТРОВ ======
+function getProlificParams() {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  const prolificPID = urlParams.get('prolificPID') || sessionStorage.getItem('prolificPID') || null;
+  const studyID = urlParams.get('studyID') || sessionStorage.getItem('studyID') || null;
+  const sessionID = urlParams.get('sessionID') || sessionStorage.getItem('sessionID') || null;
+  
+  // Сохраняем в sessionStorage если есть
+  if (prolificPID) sessionStorage.setItem('prolificPID', prolificPID);
+  if (studyID) sessionStorage.setItem('studyID', studyID);
+  if (sessionID) sessionStorage.setItem('sessionID', sessionID);
+  
+  if (prolificPID) {
+    console.log('✅ Prolific participant detected');
+    console.log('🆔 Prolific PID:', prolificPID);
+    console.log('📚 Study ID:', studyID);
+    console.log('🔑 Session ID:', sessionID);
+  }
+  
+  return { prolificPID, studyID, sessionID };
+}
+
 // ====== СОСТОЯНИЕ + ЛОГИ ======
 const state = {
   participantId: getParticipantId(),  // ⭐ НОВОЕ!
+  ...getProlificParams(),  // ⭐ PROLIFIC: добавляем prolificPID, studyID, sessionID
   condition: window.EXPERIMENT_CONDITION ?? 1,
   startTs: Date.now(),
   events: [],
@@ -463,6 +487,9 @@ function handleGoSurvey() {
   
   const payload = {
     participantId: state.participantId,  // ⭐ НОВОЕ!
+    prolificPID: state.prolificPID || null,  // ⭐ PROLIFIC
+    studyID: state.studyID || null,          // ⭐ PROLIFIC
+    sessionID: state.sessionID || null,      // ⭐ PROLIFIC
     condition: state.condition,
     startTs: state.startTs,
     endTs,
@@ -523,6 +550,11 @@ window.addEventListener("load", () => {
   console.log('🚀 Страница магазина загружена');
   console.log('🆔 ParticipantId:', state.participantId);
   console.log('🧪 Condition:', state.condition);
+  if (state.prolificPID) {
+    console.log('✅ Prolific PID:', state.prolificPID);
+    console.log('📚 Study ID:', state.studyID);
+    console.log('🔑 Session ID:', state.sessionID);
+  }
   
   logEvent("page_load", { 
     condition: state.condition,
