@@ -426,10 +426,14 @@ function prepareFinalData(formData) {
     cartTotal = experimentData.cartTotal;
   }
   
+  // ⭐ ДОБАВЛЕНЫ 3 СТРОКИ ДЛЯ PROLIFIC ⭐
   const finalData = {
     timestamp: new Date().toISOString(),
     submissionTime: new Date().toLocaleString('de-DE'),
     participantId: experimentData.participantId || 'UNKNOWN',
+    prolificPID: experimentData.prolificPID || sessionStorage.getItem('prolificPID') || 'N/A',
+    studyID: experimentData.studyID || sessionStorage.getItem('studyID') || 'N/A',
+    sessionID: experimentData.sessionID || sessionStorage.getItem('sessionID') || 'N/A',
     experimentCondition: experimentData.condition,
     experimentGroupName: ['control', 'socialproof', 'scarcity', 'both'][experimentData.condition - 1] || 'unknown',
     timeOnSiteSeconds: Math.round(experimentData.timeOnSiteMs / 1000),
