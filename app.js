@@ -44,6 +44,9 @@ const PRODUCTS = [
   },
 ];
 
+// ====== ⭐ НОВОЕ: МАКСИМАЛЬНАЯ СУММА КОРЗИНЫ ======
+const MAX_CART_TOTAL = 15.00;
+
 // ====== SOCIAL PROOF (звёзды + кол-во оценок) ======
 const SOCIAL_PROOF = {
   p1: { rating: 5.0, count: 164 },
@@ -462,18 +465,32 @@ function renderCart() {
   if (totalEl) totalEl.textContent = formatEUR(total);
 }
 
-// ====== КНОПКА "ДАЛЬШЕ" + ВРЕМЯ ======
+// ====== ⭐ ОБНОВЛЕНО: КНОПКА "ДАЛЬШЕ" + ПРОВЕРКА €15 ======
 function updateGoSurveyState() {
-  const { count } = cartTotals();
+  const { count, total } = cartTotals();
   const btn = document.getElementById("goSurveyBtn");
   const hint = document.getElementById("hintText");
   if (!btn || !hint) return;
 
-  btn.disabled = count <= 0;
-
-  hint.textContent = count > 0
-    ? "Sie können jetzt zur Umfrage wechseln."
-    : "Fügen Sie mindestens 1 Artikel in den Warenkorb hinzu.";
+  // ⭐ НОВАЯ ЛОГИКА: Проверяем сумму
+  if (count === 0) {
+    // Корзина пустая
+    btn.disabled = true;
+    hint.textContent = "Fügen Sie mindestens 1 Artikel in den Warenkorb hinzu.";
+    hint.style.color = "#666";
+  } else if (total > MAX_CART_TOTAL) {
+    // Сумма больше €15
+    btn.disabled = true;
+    hint.textContent = `Maximalbetrag überschritten! Ihr Warenkorb: ${formatEUR(total)} / Max: ${formatEUR(MAX_CART_TOTAL)}. Bitte reduzieren Sie die Menge.`;
+    hint.style.color = "#c62828";
+    hint.style.fontWeight = "600";
+  } else {
+    // Всё ОК: корзина не пустая и сумма ≤ €15
+    btn.disabled = false;
+    hint.textContent = `Sie können jetzt zur Umfrage wechseln. (Ihr Warenkorb: ${formatEUR(total)})`;
+    hint.style.color = "#2e7d32";
+    hint.style.fontWeight = "600";
+  }
 }
 
 // ====== ⭐ ИЗМЕНЕНО: ПЕРЕХОД НА SURVEY.HTML (вместо LimeSurvey) ======
@@ -572,6 +589,7 @@ window.addEventListener("load", () => {
 window.addEventListener("beforeunload", () => {
   logEvent("page_unload", { timeOnSiteMs: Date.now() - state.startTs });
 });
+
 
 
 
