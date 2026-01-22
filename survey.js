@@ -1,12 +1,7 @@
 // ====== КОНФИГУРАЦИЯ ======
 const CONFIG = {
-  // URL вашего Google Apps Script Web App
   GOOGLE_SHEETS_URL: 'https://script.google.com/macros/s/AKfycbylAjyhtWSg-Y_U202Dpqt_DRMfJxIG9gHvzb_N-kZSazvPqo5YedeUj7uJRaesaQgT/exec',
-  
-  // Альтернативный URL thank-you страницы
   THANK_YOU_URL: 'thank-you.html',
-  
-  // Включить debug режим (логи в консоль)
   DEBUG: true
 };
 
@@ -108,91 +103,9 @@ function loadExperimentData() {
   }
 }
 
-// ====== ПОКАЗАТЬ/СКРЫТЬ УСЛОВНЫЕ ВОПРОСЫ ======
-function setupConditionalQuestions() {
-  const condition = surveyState.condition;
-  log('========== НАСТРОЙКА УСЛОВНЫХ ВОПРОСОВ ==========');
-  log('Группа участника:', condition);
-  
-  const urgencyBlock = document.getElementById('qnew2_block');
-  if (urgencyBlock) {
-    if (condition === 3 || condition === 4) {
-      urgencyBlock.classList.remove('hidden');
-      const inputs = urgencyBlock.querySelectorAll('input[type="radio"]');
-      inputs.forEach(inp => inp.setAttribute('required', 'required'));
-      log('✓ NEW_Q2 (Urgency) ПОКАЗАН');
-    } else {
-      urgencyBlock.classList.add('hidden');
-      const inputs = urgencyBlock.querySelectorAll('input[type="radio"]');
-      inputs.forEach(inp => {
-        inp.removeAttribute('required');
-        inp.checked = false;
-      });
-      log('✗ NEW_Q2 (Urgency) СКРЫТ');
-    }
-  }
-  
-  const trustBlock = document.getElementById('qnew3_block');
-  if (trustBlock) {
-    if (condition === 2 || condition === 4) {
-      trustBlock.classList.remove('hidden');
-      const inputs = trustBlock.querySelectorAll('input[type="radio"]');
-      inputs.forEach(inp => inp.setAttribute('required', 'required'));
-      log('✓ NEW_Q3 (Trust) ПОКАЗАН');
-    } else {
-      trustBlock.classList.add('hidden');
-      const inputs = trustBlock.querySelectorAll('input[type="radio"]');
-      inputs.forEach(inp => {
-        inp.removeAttribute('required');
-        inp.checked = false;
-      });
-      log('✗ NEW_Q3 (Trust) СКРЫТ');
-    }
-  }
-  
-  const beliebtBlock = document.getElementById('q03_block');
-  if (beliebtBlock) {
-    if (condition === 2 || condition === 4) {
-      beliebtBlock.classList.remove('hidden');
-      const inputs = beliebtBlock.querySelectorAll('input[type="radio"]');
-      inputs.forEach(inp => inp.setAttribute('required', 'required'));
-      log('✓ Q03 (Beliebtheit) ПОКАЗАН');
-    } else {
-      beliebtBlock.classList.add('hidden');
-      const inputs = beliebtBlock.querySelectorAll('input[type="radio"]');
-      inputs.forEach(inp => {
-        inp.removeAttribute('required');
-        inp.checked = false;
-      });
-      log('✗ Q03 (Beliebtheit) СКРЫТ');
-    }
-  }
-  
-  const knappBlock = document.getElementById('q04_block');
-  if (knappBlock) {
-    if (condition === 3 || condition === 4) {
-      knappBlock.classList.remove('hidden');
-      const inputs = knappBlock.querySelectorAll('input[type="radio"]');
-      inputs.forEach(inp => inp.setAttribute('required', 'required'));
-      log('✓ Q04 (Knappheit) ПОКАЗАН');
-    } else {
-      knappBlock.classList.add('hidden');
-      const inputs = knappBlock.querySelectorAll('input[type="radio"]');
-      inputs.forEach(inp => {
-        inp.removeAttribute('required');
-        inp.checked = false;
-      });
-      log('✗ Q04 (Knappheit) СКРЫТ');
-    }
-  }
-  
-  log('========== УСЛОВНЫЕ ВОПРОСЫ НАСТРОЕНЫ ==========');
-  countTotalQuestions();
-}
-
 // ====== ПОДСЧЁТ ВОПРОСОВ ======
 function countTotalQuestions() {
-  const visibleRequired = document.querySelectorAll('.question-block:not(.hidden) input[required], .question-block:not(.hidden) select[required]');
+  const visibleRequired = document.querySelectorAll('.question-block input[required], .question-block select[required]');
   const uniqueNames = new Set();
   visibleRequired.forEach(input => {
     if (input.name) uniqueNames.add(input.name);
@@ -211,15 +124,12 @@ function updateProgressBar() {
   
   const radioGroupsAll = {};
   form.querySelectorAll('input[type="radio"]').forEach(radio => {
-    const block = radio.closest('.question-block');
-    if (block && !block.classList.contains('hidden')) {
-      if (!radioGroupsAll[radio.name]) {
-        radioGroupsAll[radio.name] = { radios: [], hasRequired: false };
-      }
-      radioGroupsAll[radio.name].radios.push(radio);
-      if (radio.hasAttribute('required')) {
-        radioGroupsAll[radio.name].hasRequired = true;
-      }
+    if (!radioGroupsAll[radio.name]) {
+      radioGroupsAll[radio.name] = { radios: [], hasRequired: false };
+    }
+    radioGroupsAll[radio.name].radios.push(radio);
+    if (radio.hasAttribute('required')) {
+      radioGroupsAll[radio.name].hasRequired = true;
     }
   });
   
@@ -232,18 +142,16 @@ function updateProgressBar() {
   });
   
   form.querySelectorAll('select[required]').forEach(select => {
-    if (!select.closest('.question-block').classList.contains('hidden')) {
-      allQuestions.add(select.name);
-      if (select.value) answeredQuestions.add(select.name);
-    }
+    allQuestions.add(select.name);
+    if (select.value) answeredQuestions.add(select.name);
   });
   
-  const alterInput = document.getElementById('q16_alter');
-  const keineAngabe = document.getElementById('q16_keine_angabe');
-  if (alterInput && !alterInput.closest('.question-block').classList.contains('hidden')) {
-    allQuestions.add('q16_alter');
+  const alterInput = document.getElementById('q18_age');
+  const keineAngabe = document.getElementById('q18_keine_angabe');
+  if (alterInput) {
+    allQuestions.add('q18_age');
     if (alterInput.value || (keineAngabe && keineAngabe.checked)) {
-      answeredQuestions.add('q16_alter');
+      answeredQuestions.add('q18_age');
     }
   }
   
@@ -271,7 +179,7 @@ function validateForm() {
   const radioGroupsAll = {};
   form.querySelectorAll('input[type="radio"]').forEach(radio => {
     const block = radio.closest('.question-block');
-    if (block && !block.classList.contains('hidden')) {
+    if (block) {
       if (!radioGroupsAll[radio.name]) {
         radioGroupsAll[radio.name] = { radios: [], hasRequired: false, block: block };
       }
@@ -282,7 +190,7 @@ function validateForm() {
     }
   });
   
-  log(`Найдено ${Object.keys(radioGroupsAll).length} видимых radio групп`);
+  log(`Найдено ${Object.keys(radioGroupsAll).length} radio групп`);
   
   Object.entries(radioGroupsAll).forEach(([name, group]) => {
     if (group.hasRequired) {
@@ -303,7 +211,7 @@ function validateForm() {
   let selectCount = 0;
   form.querySelectorAll('select').forEach(select => {
     const block = select.closest('.question-block');
-    if (block && !block.classList.contains('hidden') && select.hasAttribute('required')) {
+    if (block && select.hasAttribute('required')) {
       selectCount++;
       log(`Проверка ${select.name}: ${select.value ? '✓ ВЫБРАНО' : '✗ НЕ ВЫБРАНО'}`);
       if (!select.value) {
@@ -316,19 +224,19 @@ function validateForm() {
       }
     }
   });
-  log(`Найдено ${selectCount} видимых select полей для проверки`);
+  log(`Найдено ${selectCount} select полей для проверки`);
   
-  const alterInput = document.getElementById('q16_alter');
-  const keineAngabe = document.getElementById('q16_keine_angabe');
+  const alterInput = document.getElementById('q18_age');
+  const keineAngabe = document.getElementById('q18_keine_angabe');
   if (alterInput) {
     const block = alterInput.closest('.question-block');
-    if (block && !block.classList.contains('hidden')) {
+    if (block) {
       const hasAge = alterInput.value && alterInput.value.trim() !== '';
       const hasCheckbox = keineAngabe && keineAngabe.checked;
       log(`Проверка возраста: значение="${alterInput.value}", checkbox=${hasCheckbox}, valid=${hasAge || hasCheckbox ? 'ДА' : 'НЕТ'}`);
       if (!hasAge && !hasCheckbox) {
         isValid = false;
-        const errorMsg = document.getElementById('q16_error');
+        const errorMsg = document.getElementById('q18_error');
         if (errorMsg) {
           errorMsg.classList.add('show');
           log('❌ ОШИБКА: возраст не указан');
@@ -369,13 +277,13 @@ function collectFormData() {
     formData[select.name] = select.value;
   });
   
-  const alterInput = document.getElementById('q16_alter');
-  const keineAngabe = document.getElementById('q16_keine_angabe');
+  const alterInput = document.getElementById('q18_age');
+  const keineAngabe = document.getElementById('q18_keine_angabe');
   if (alterInput) {
     if (keineAngabe && keineAngabe.checked) {
-      formData.q16_alter = 'Keine Angabe';
+      formData.q18_age = 'Keine Angabe';
     } else {
-      formData.q16_alter = alterInput.value;
+      formData.q18_age = alterInput.value;
     }
   }
   
@@ -383,7 +291,7 @@ function collectFormData() {
   return formData;
 }
 
-// ====== ОТПРАВКА В GOOGLE SHEETS (ИСПРАВЛЕНО!) ======
+// ====== ОТПРАВКА В GOOGLE SHEETS ======
 async function sendToGoogleSheets(data) {
   log('📤 Отправка данных в Google Sheets...');
   log('URL:', CONFIG.GOOGLE_SHEETS_URL);
@@ -426,7 +334,6 @@ function prepareFinalData(formData) {
     cartTotal = experimentData.cartTotal;
   }
   
-  // ⭐ ДОБАВЛЕНЫ 3 СТРОКИ ДЛЯ PROLIFIC ⭐
   const finalData = {
     timestamp: new Date().toISOString(),
     submissionTime: new Date().toLocaleString('de-DE'),
@@ -440,25 +347,40 @@ function prepareFinalData(formData) {
     cartProducts: cartItems.join(',') || 'empty',
     cartTotal: cartTotal.toFixed(2),
     surveyDurationSeconds: Math.round((Date.now() - surveyState.formStartTs) / 1000),
-    q06_attractiveness: formData.q06_attraktiv,
-    q07_quality: formData.q07_hochwertig,
-    q05_purchaseIntention: formData.q05_kaufwahrsch,
-    q11_canImagine: formData.q11_vorstellen,
-    q08_relevance: formData.q08_relevant,
-    q09_involvement: formData.q09_beschaeftigt,
-    q10_interest: formData.q10_interesse,
-    qnew1_pricePerception: formData.qnew1_preis,
-    qnew2_urgency: formData.qnew2_urgency || 'N/A',
-    qnew3_trust: formData.qnew3_trust || 'N/A',
-    q03_popularity: formData.q03_beliebt || 'N/A',
-    q04_scarcity: formData.q04_knapp || 'N/A',
-    q13_socialProofCheck: formData.q13_sp_check,
-    q14_scarcityCheck: formData.q14_sc_check,
-    q15_attentionCheck: formData.q15_attention,
-    q16_age: formData.q16_alter,
-    q17_gender: formData.q17_geschlecht,
-    q18_education: formData.q18_bildung,
-    q19_proteinFrequency: formData.q19_protein,
+    
+    // Q01-Q08: Produktbewertung
+    q01_attractiveness: formData.q01_attractiveness,
+    q02_quality: formData.q02_quality,
+    q03_purchaseIntention: formData.q03_purchase_intention,
+    q04_canImagine: formData.q04_can_imagine,
+    q05_relevance: formData.q05_relevance,
+    q06_involvement: formData.q06_involvement,
+    q07_interest: formData.q07_interest,
+    q08_pricePerception: formData.q08_price_perception,
+    
+    // Q09-Q11: Wahrgenommene Beliebtheit (Медиатор)
+    q09_popularity1: formData.q09_popularity_1,
+    q10_popularity2: formData.q10_popularity_2,
+    q11_popularity3: formData.q11_popularity_3,
+    
+    // Q12-Q14: Wahrgenommene Dringlichkeit (Медиатор)
+    q12_urgency1: formData.q12_urgency_1,
+    q13_urgency2: formData.q13_urgency_2,
+    q14_urgency3: formData.q14_urgency_3,
+    
+    // Q15-Q16: Manipulation Checks
+    q15_socialProofCheck: formData.q15_sp_check,
+    q16_scarcityCheck: formData.q16_sc_check,
+    
+    // Q17: Attention Check
+    q17_attentionCheck: formData.q17_attention,
+    
+    // Q18-Q21: Демография
+    q18_age: formData.q18_age,
+    q19_gender: formData.q19_gender,
+    q20_education: formData.q20_education,
+    q21_proteinFrequency: formData.q21_protein_frequency,
+    
     interactionEvents: JSON.stringify(surveyState.interactionEvents),
     experimentEvents: JSON.stringify(experimentData.events || [])
   };
@@ -522,15 +444,15 @@ function setupEventListeners() {
     }
   });
   
-  const keineAngabe = document.getElementById('q16_keine_angabe');
-  const alterInput = document.getElementById('q16_alter');
+  const keineAngabe = document.getElementById('q18_keine_angabe');
+  const alterInput = document.getElementById('q18_age');
   
   if (keineAngabe && alterInput) {
     keineAngabe.addEventListener('change', () => {
       if (keineAngabe.checked) {
         alterInput.value = '';
         alterInput.disabled = true;
-        logInteraction('checkbox', 'q16_keine_angabe', 'checked');
+        logInteraction('checkbox', 'q18_keine_angabe', 'checked');
       } else {
         alterInput.disabled = false;
       }
@@ -572,7 +494,7 @@ function init() {
     console.warn('⚠️ Experiment data not found or incomplete');
   }
   
-  setupConditionalQuestions();
+  countTotalQuestions();
   setupEventListeners();
   updateProgressBar();
   logInteraction('survey_start', 'init', surveyState.condition);
