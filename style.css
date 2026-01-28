@@ -92,20 +92,35 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
 
 .add-btn{ width: fit-content; }
 
-/* ===== SOCIAL PROOF - ЗАМЕТНЕЕ! ===== */
+/* ===== SOCIAL PROOF - ЗОЛОТОЙ БЕЙДЖ ===== */
 .social-proof{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 8px;
+  border: 2px solid #f4c430;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  margin-top: 6px;
+  animation: fadeInScale 0.5s ease-out;
 }
 
-/* ⭐ ЗВЁЗДЫ - БОЛЬШЕ! */
+/* Иконка огонька перед звёздами */
+.social-proof::before {
+  content: "🔥";
+  font-size: 16px;
+  margin-right: -4px;
+}
+
+/* ⭐ ЗВЁЗДЫ */
 .stars{
-  display:flex;
-  gap:2px;
-  font-size:20px;
-  line-height:1;
+  display: flex;
+  gap: 2px;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: 2px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .star{
@@ -139,20 +154,13 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
   overflow:hidden;
 }
 
-/* ⭐ BEWERTUNGEN - ОТЧЁТЛИВЕЕ! */
+/* ⭐ BEWERTUNGEN */
 .rating-count{
-  font-size:14px;
-  font-weight:600;
-  color:#333;
+  font-size: 14px;
+  font-weight: 600;
+  color: #654321;
 }
 
-.social-proof{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-}
-.stars{ display:inline-flex; gap:2px; line-height:1; }
 .star.full{ color:#f5b301; }
 .star.empty{ color:#c9c9d6; }
 
@@ -166,6 +174,23 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
 
 .cart-controls{ display:flex; align-items:center; gap:8px; }
 .cart-line-price{ font-size:14px; }
+
+/* ===== АНИМАЦИЯ SOCIAL PROOF ===== */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.social-proof:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
 
 
 /* ========================================
@@ -378,4 +403,3 @@ body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
   }
 }
-
