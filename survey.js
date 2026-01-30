@@ -291,6 +291,38 @@ function collectFormData() {
   return formData;
 }
 
+// ====== ПАРСИНГ КОРЗИНЫ ДЛЯ ПОДСЧЁТА ПРОДУКТОВ ======
+function parseCartProducts(cartProductsString) {
+  const productQuantities = {
+    p1: 0,
+    p2: 0,
+    p3: 0,
+    p4: 0,
+    p5: 0,
+    p6: 0
+  };
+  
+  if (!cartProductsString || cartProductsString === 'empty') {
+    return productQuantities;
+  }
+  
+  const items = cartProductsString.split(',');
+  items.forEach(item => {
+    const parts = item.trim().split(':');
+    if (parts.length === 2) {
+      const productId = parts[0].trim();
+      const quantity = parseInt(parts[1].trim(), 10);
+      
+      if (productQuantities.hasOwnProperty(productId) && !isNaN(quantity)) {
+        productQuantities[productId] = quantity;
+      }
+    }
+  });
+  
+  log('Parsed cart products:', productQuantities);
+  return productQuantities;
+}
+
 // ====== ОТПРАВКА В GOOGLE SHEETS ======
 async function sendToGoogleSheets(data) {
   log('📤 Отправка данных в Google Sheets...');
@@ -334,6 +366,9 @@ function prepareFinalData(formData) {
     cartTotal = experimentData.cartTotal;
   }
   
+  const cartProductsString = cartItems.join(',') || 'empty';
+  const productQty = parseCartProducts(cartProductsString);
+  
   const finalData = {
     timestamp: new Date().toISOString(),
     submissionTime: new Date().toLocaleString('de-DE'),
@@ -344,15 +379,21 @@ function prepareFinalData(formData) {
     experimentCondition: experimentData.condition,
     experimentGroupName: ['control', 'socialproof', 'scarcity', 'both'][experimentData.condition - 1] || 'unknown',
     timeOnSiteSeconds: Math.round(experimentData.timeOnSiteMs / 1000),
-    cartProducts: cartItems.join(',') || 'empty',
+    cartProducts: cartProductsString,
     cartTotal: cartTotal.toFixed(2),
+    p1_qty: productQty.p1,
+    p2_qty: productQty.p2,
+    p3_qty: productQty.p3,
+    p4_qty: productQty.p4,
+    p5_qty: productQty.p5,
+    p6_qty: productQty.p6,
     surveyDurationSeconds: Math.round((Date.now() - surveyState.formStartTs) / 1000),
     
     // Q01-Q08: Produktbewertung
     q01_attractiveness: formData.q01_attractiveness,
-    q02_quality: formData.q02_quality,
+    q02_choiceIntention: formData.q02_choice_intention,
     q03_purchaseIntention: formData.q03_purchase_intention,
-    q04_canImagine: formData.q04_can_imagine,
+    q04_recommendationIntention: formData.q04_recommendation_intention,
     q05_relevance: formData.q05_relevance,
     q06_involvement: formData.q06_involvement,
     q07_interest: formData.q07_interest,
@@ -516,5 +557,6 @@ window.addEventListener('beforeunload', () => {
   logInteraction('page_unload', 'survey', 'incomplete');
   log('Survey page unloading. Duration:', (Date.now() - surveyState.formStartTs) / 1000, 'seconds');
 });
+
 
 
